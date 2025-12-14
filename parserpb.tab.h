@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 12 "parserpb.y"
+#line 16 "parserpb.y"
 
     typedef struct {
         double values[100];
@@ -76,8 +76,7 @@ extern int yydebug;
     PRODUIT = 268,                 /* PRODUIT  */
     MOYENNE = 269,                 /* MOYENNE  */
     VARIANCE = 270,                /* VARIANCE  */
-    FIN = 271,                     /* FIN  */
-    UMINUS = 272                   /* UMINUS  */
+    UMINUS = 271                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -86,12 +85,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 27 "parserpb.y"
+#line 31 "parserpb.y"
 
     double dval;
     liste_args_t args;
 
-#line 95 "parserpb.tab.h"
+#line 94 "parserpb.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

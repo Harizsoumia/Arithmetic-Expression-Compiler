@@ -475,7 +475,8 @@ char *yytext;
 #include <stdlib.h>
 #include <stdio.h>
 #line 477 "lex.yy.c"
-#line 478 "lex.yy.c"
+#define YY_NO_INPUT 1
+#line 479 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -535,8 +536,6 @@ extern int yywrap ( void );
 #endif
 
 #ifndef YY_NO_UNPUT
-    
-    static void yyunput ( int c, char *buf_ptr  );
     
 #endif
 
@@ -692,10 +691,10 @@ YY_DECL
 		}
 
 	{
-#line 9 "lexerpb.l"
+#line 11 "lexerpb.l"
 
 
-#line 698 "lex.yy.c"
+#line 697 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -754,91 +753,91 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "lexerpb.l"
+#line 13 "lexerpb.l"
 { /* ignorer les espaces et tabulations */ }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 12 "lexerpb.l"
+#line 14 "lexerpb.l"
 { return '\n'; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "lexerpb.l"
+#line 15 "lexerpb.l"
 { yylval.dval = atof(yytext); return FLOTTANT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "lexerpb.l"
+#line 16 "lexerpb.l"
 { yylval.dval = atof(yytext); return ENTIER; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "lexerpb.l"
+#line 17 "lexerpb.l"
 { return PLUS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "lexerpb.l"
+#line 18 "lexerpb.l"
 { return MOINS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "lexerpb.l"
+#line 19 "lexerpb.l"
 { return MULT; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "lexerpb.l"
+#line 20 "lexerpb.l"
 { return DIV; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "lexerpb.l"
+#line 21 "lexerpb.l"
 { return PARG; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "lexerpb.l"
+#line 22 "lexerpb.l"
 { return PARD; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "lexerpb.l"
+#line 23 "lexerpb.l"
 { return VIRG; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 22 "lexerpb.l"
+#line 24 "lexerpb.l"
 { return SOMME; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 23 "lexerpb.l"
+#line 25 "lexerpb.l"
 { return PRODUIT; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 24 "lexerpb.l"
+#line 26 "lexerpb.l"
 { return MOYENNE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 25 "lexerpb.l"
+#line 27 "lexerpb.l"
 { return VARIANCE; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 26 "lexerpb.l"
+#line 28 "lexerpb.l"
 { printf("ERREUR LEXICALE : Caractère non reconnu '%s'\n", yytext); return yytext[0]; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 28 "lexerpb.l"
+#line 30 "lexerpb.l"
 ECHO;
 	YY_BREAK
-#line 841 "lex.yy.c"
+#line 840 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1173,43 +1172,6 @@ static int yy_get_next_buffer (void)
 }
 
 #ifndef YY_NO_UNPUT
-
-    static void yyunput (int c, char * yy_bp )
-{
-	char *yy_cp;
-    
-    yy_cp = (yy_c_buf_p);
-
-	/* undo effects of setting up yytext */
-	*yy_cp = (yy_hold_char);
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		int number_to_move = (yy_n_chars) + 2;
-		char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			(yy_n_chars) = (int) YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	(yytext_ptr) = yy_bp;
-	(yy_hold_char) = *yy_cp;
-	(yy_c_buf_p) = yy_cp;
-}
 
 #endif
 
@@ -1843,7 +1805,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 28 "lexerpb.l"
+#line 30 "lexerpb.l"
 
 
 

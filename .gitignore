@@ -1,0 +1,10 @@
+.vscode/
+# Generated lexer/parser files
+lex.yy.c
+lex_*.yy.c
+*.tab.c
+*.tab.h
+parserpb.tab.*
+# Compiled executables
+*.exe
+calculator

@@ -1,21 +1,56 @@
-LEX=flex
-YACC=bison -d
-CC=gcc
-CFLAGS=-Wall -lm
+CC = gcc
+CFLAGS = -Wall -g
+LEX = flex
+YACC = bison
 
-all: calculateur.exe
+# Répertoires
+SRC_DIR = src
+BUILD_DIR = build
 
-lex.yy.c: lexerpb.l
-	$(LEX) lexerpb.l
+# Nom de l'exécutable
+TARGET = compiler
 
-parserpb.tab.c parserpb.tab.h: parserpb.y
-	$(YACC) parserpb.y
+# Fichiers sources
+LEXER = $(SRC_DIR)/lexer.l
+PARSER = $(SRC_DIR)/parser.y
 
-calculateur.exe: lex.yy.c parserpb.tab.c
-	$(CC) lex.yy.c parserpb.tab.c -o calculateur.exe $(CFLAGS)
+# Fichiers générés
+LEX_C = $(BUILD_DIR)/lex.yy.c
+PARSER_C = $(BUILD_DIR)/parser.tab.c
+PARSER_H = $(BUILD_DIR)/parser.tab.h
+
+# Fichiers objets
+OBJS = $(BUILD_DIR)/lex.yy.o $(BUILD_DIR)/parser.tab.o
+
+all: $(BUILD_DIR) $(TARGET)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS) -lm
+	@echo "✓ Compilation réussie : $(TARGET)"
+
+$(LEX_C): $(LEXER) $(PARSER_H)
+	$(LEX) -o $(LEX_C) $(LEXER)
+
+$(PARSER_C) $(PARSER_H): $(PARSER)
+	$(YACC) -d -o $(PARSER_C) $(PARSER)
+
+$(BUILD_DIR)/lex.yy.o: $(LEX_C)
+	$(CC) $(CFLAGS) -I$(BUILD_DIR) -c $< -o $@
+
+$(BUILD_DIR)/parser.tab.o: $(PARSER_C)
+	$(CC) $(CFLAGS) -I$(BUILD_DIR) -c $< -o $@
 
 clean:
-	rm -f calculateur.exe lex.yy.c parserpb.tab.c parserpb.tab.h
+	rm -rf $(BUILD_DIR) $(TARGET)
+	@echo "✓ Nettoyage terminé"
 
-test: calculateur.exe
-	./calculateur.exe expb.txt
+run: $(TARGET)
+	./$(TARGET)
+
+test: $(TARGET)
+	./$(TARGET) test.txt
+
+.PHONY: all clean run test

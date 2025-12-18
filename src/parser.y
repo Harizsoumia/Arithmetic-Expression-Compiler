@@ -3,16 +3,19 @@
 #include <stdlib.h>
 #include <math.h>
 
-void yyerror(const char *s);
-extern int yylex();
+extern int yylineno;
+extern char *yytext;
 extern FILE *yyin;
+
+/* Declaration de yylex */
+int yylex(void);
+
+void yyerror(const char *s){
+    fprintf(stderr, "Syntax error at line %d: %s\n", yylineno, yytext ? yytext : "end of line");
+}
 %}
 
-%code top {
-#define _POSIX_C_SOURCE 200809L
-}
-
-/* Définition de la structure AVANT %union */
+/* Definition de la structure AVANT %union */
 %code requires {
     typedef struct {
         double values[100];
@@ -21,7 +24,7 @@ extern FILE *yyin;
 }
 
 %code {
-    /* Déclarations de fonctions */
+    /* Declarations de fonctions */
     double somme(liste_args_t args);
     double produit(liste_args_t args);
     double moyenne(liste_args_t args);
@@ -53,8 +56,8 @@ programme:
 ;
 
 ligne:
-    expression '\n' { printf("Résultat = %lf\n", $1); }
-    | '\n'          { /* ligne vide */ }
+    expression '\n' { printf("Result = %lf\n", $1); }
+    | '\n'          { /* empty line */ }
 ;
 
 expression:
@@ -65,7 +68,14 @@ expression:
 
 terme:
       terme MULT facteur          { $$ = $1 * $3; }
-    | terme DIV facteur           { $$ = $1 / $3; }
+    | terme DIV facteur           { 
+          if ($3 == 0) {
+              fprintf(stderr, "ERROR: Division by zero at line %d\n", yylineno);
+              $$ = 0;
+          } else {
+              $$ = $1 / $3;
+          }
+      }
     | facteur                     { $$ = $1; }
 ;
 
@@ -91,21 +101,15 @@ liste_args:
 
 %%
 
-void yyerror(const char *s) {
-    fprintf(stderr, "Erreur de syntaxe : %s\n", s);
-}
-
 double somme(liste_args_t args) {
     double s = 0;
-    int i;
-    for(i=0; i<args.len; i++) s += args.values[i];
+    for(int i=0; i<args.len; i++) s += args.values[i];
     return s;
 }
 
 double produit(liste_args_t args) {
     double p = 1;
-    int i;
-    for(i=0; i<args.len; i++) p *= args.values[i];
+    for(int i=0; i<args.len; i++) p *= args.values[i];
     return p;
 }
 
@@ -124,7 +128,7 @@ double variance(liste_args_t args) {
 int main(int argc, char **argv) {
     if(argc>1) {
         yyin = fopen(argv[1],"r");
-        if(!yyin) { perror("Erreur d'ouverture du fichier"); return 1; }
+        if(!yyin) { perror("Error opening file"); return 1; }
     }
     else yyin=stdin;
     
@@ -133,20 +137,10 @@ int main(int argc, char **argv) {
     if(argc>1) fclose(yyin);
     
     if(result == 0) {
-        printf("\nAnalyse complète : SUCCÈS\n");
+        printf("\nAnalysis complete: SUCCESS\n");
     } else {
-        printf("\nAnalyse complète : ÉCHEC\n");
+        printf("\nAnalysis complete: FAILED\n");
     }
     
     return result;
 }
-
-
-
-
-
-
-
-
-
-
